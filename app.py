@@ -1,3 +1,4 @@
+import time
 from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -8,33 +9,48 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # Get MySQL environment variables or use defaults
-mysql_host = os.getenv('MYSQL_HOST', 'localhost')
+mysql_host = os.getenv('MYSQL_HOST', 'mysql')
 mysql_user = os.getenv('MYSQL_USER', 'root')
-mysql_password = os.getenv('MYSQL_PASSWORD', 'your_password')
-mysql_database = os.getenv('MYSQL_DATABASE', 'your_database_name')
+mysql_password = os.getenv('MYSQL_PASSWORD', 'password')
+mysql_database = os.getenv('MYSQL_DATABASE', 'my_db')
 
-print("MYSQL_USER ",mysql_user)
+print("MYSQL_USER ", mysql_user)
 
-# Create a connection to MySQL server
-db = mysql.connector.connect(
-    host=mysql_host,
-    user=mysql_user,
-    password=mysql_password,
-)
-cursor = db.cursor()
+# Add a delay to allow MySQL to start
+max_attempts = 10
+for _ in range(max_attempts):
+    try:
+        # Create a connection to MySQL server
+        db = mysql.connector.connect(
+            host=mysql_host,
+            user=mysql_user,
+            password=mysql_password,
+        )
+        cursor = db.cursor()
 
-# Check if the database exists, and create it if not
-cursor.execute("CREATE DATABASE IF NOT EXISTS " + mysql_database)
-db.database = mysql_database
+        # Check if the database exists, and create it if not
+        cursor.execute("CREATE DATABASE IF NOT EXISTS " + mysql_database)
+        db.database = mysql_database
 
-# Create users table if it doesn't exist
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL
-    )
-''')
+        # Create users table if it doesn't exist
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) NOT NULL,
+                password VARCHAR(255) NOT NULL
+            )
+        ''')
+
+        break  # Break out of the loop if the connection is successful
+
+    except Exception as e:
+        print(f"Failed to connect to MySQL: {e}")
+        if _ < max_attempts - 1:
+            time.sleep(5)  # Wait for 5 seconds before retrying
+        else:
+            raise Exception("Failed to connect to MySQL after multiple attempts")
+
+# The rest of your Flask app code remains unchanged
 
 # Prevent caching after logout
 @app.after_request
