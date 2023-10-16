@@ -8,11 +8,19 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# Get MySQL environment variables or use defaults
+# Get MySQL environment variables or use defaults this is for docker-compose
 mysql_host = os.getenv('MYSQL_HOST', 'mysql')
 mysql_user = os.getenv('MYSQL_USER', 'root')
-mysql_password = os.getenv('MYSQL_PASSWORD', 'password')
+mysql_password = os.getenv('MYSQL_ROOT_PASSWORD', 'password')
 mysql_database = os.getenv('MYSQL_DATABASE', 'my_db')
+mysql_port = int(os.getenv('MYSQL_PORT', 3306))
+
+# Get MySQL environment variables or use defaults this is for local
+# mysql_host = os.getenv('MYSQL_HOST', 'localhost')
+# mysql_user = os.getenv('MYSQL_USER', 'rahul')
+# mysql_password = os.getenv('MYSQL_PASSWORD', 'Rahul@123')
+# mysql_database = os.getenv('MYSQL_DATABASE', 'python_db')
+# mysql_port = int(os.getenv('MYSQL_PORT', 3306))
 
 print("MYSQL_USER ", mysql_user)
 
@@ -113,4 +121,5 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
+
