@@ -22,7 +22,11 @@ mysql_port = int(os.getenv('MYSQL_PORT', 3306))
 # mysql_database = os.getenv('MYSQL_DATABASE', 'python_db')
 # mysql_port = int(os.getenv('MYSQL_PORT', 3306))
 
-print("MYSQL_USER ", mysql_user)
+# print("MYSQL_HOST ", mysql_host)
+# print("MYSQL_USER ", mysql_user)
+# print("MYSQL_ROOT_PASSWORD ", mysql_password)
+# print("MYSQL_DATABASE ", mysql_database)
+
 
 # Add a delay to allow MySQL to start
 max_attempts = 10
