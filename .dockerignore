@@ -1,0 +1,10 @@
+manifests/
+.venv
+__pycache__
+.gitignore
+Jenkinsfile
+my_config.py
+docker-compose.yaml
+flask_app.egg-info
+dist/
+build/

@@ -1,2 +1,5 @@
 __pycache__
 .venv
+flask_app.egg-info
+dist/
+build/
