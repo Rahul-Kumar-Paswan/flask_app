@@ -10,7 +10,7 @@ services:
       - mysql
     environment:
       MYSQL_HOST: mysql
-  mysql:
+  mysql: # this should match with the host name
     image: mysql:5.7
     ports:
       - 3307:3306
